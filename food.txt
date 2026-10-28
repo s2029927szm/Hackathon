@@ -1,0 +1,150 @@
+文件中包含的全部 50 道菜品名称如下：
+
+1. Mapo Tofu
+
+
+2. Kung Pao Chicken
+
+
+3. Steamed Sea Bass with Ginger & Scallion
+
+
+4. Tomato and Egg Stir-fry with Rice
+
+
+5. Sichuan Spicy Beef Noodle Soup
+
+
+6. Stir-fried Bok Choy with Shiitake
+
+
+7. Pork & Chive Steamed Dumplings
+
+
+8. Mango Pomelo Sago
+
+
+9. Chicken Tikka Masala
+
+
+10. Palak Paneer
+
+
+11. Chana Masala (Chickpea Curry)
+
+
+12. Lamb Vindaloo (Extra Spicy)
+
+
+13. Garlic Butter Naan
+
+
+14. Vegetable Samosa (2 pcs)
+
+
+15. Mango Lassi
+
+
+16. Classic Fish and Chips
+
+
+17. Full English Breakfast
+
+
+18. Shepherd's Pie
+
+
+19. Luxury Beef Wellington
+
+
+20. Jacket Potato with Cheddar & Beans
+
+
+21. Roast Chicken & Root Vegetables
+
+
+22. Sticky Toffee Pudding
+
+
+23. Dolsot Bibimbap (Beef & Egg)
+
+
+24. Kimchi Jjigae (Pork & Tofu Stew)
+
+
+25. Korean Fried Chicken (Yangnyeom)
+
+
+26. Soft Tofu Seafood Stew (Sundubu)
+
+
+27. Rose Cheese Tteokbokki
+
+
+28. Japchae (Glass Noodles with Vegetables)
+
+
+29. Grilled Beef Bulgogi Lettuce Wraps
+
+
+30. Salmon Sashimi & Avocado Poke Bowl
+
+
+31. Tonkotsu Pork Ramen
+
+
+32. Teriyaki Tofu & Edamame Bento
+
+
+33. Wagyu Beef Teppanyaki Steak
+
+
+34. Steamed Sea Salt Edamame
+
+
+35. Iced Ceremonial Matcha Oat Latte
+
+
+36. Margherita Wood-Fired Pizza
+
+
+37. Spaghetti Carbonara
+
+
+38. Grilled Herb Chicken Caesar Salad (No Cheese)
+
+
+39. Wild Mushroom & Black Truffle Risotto
+
+
+40. Classic Tiramisu
+
+
+41. Pad Thai with King Prawns
+
+
+42. Thai Green Curry with Tofu & Veg
+
+
+43. Tom Yum Goong (Spicy Prawn Soup)
+
+
+44. Green Papaya Som Tum Salad
+
+
+45. Mango Sticky Rice
+
+
+46. Mediterranean Quinoa & Grilled Salmon Bowl
+
+
+47. Falafel & Hummus Mezze Platter
+
+
+48. Mexican Grilled Chicken Burrito Bowl
+
+
+49. Spicy Beef Tacos (3 pcs)
+
+
+50. Acai Berry & Chia Superfood Smoothie Bowl

@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Diet Assistant - User App (Screen 1)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex items-center justify-center p-4">
+  <div id="main-container" class="w-full max-w-xl bg-slate-800 rounded-2xl shadow-2xl border border-slate-700 p-6 transition-all duration-300">
+    
+    <!-- Progress Header -->
+    <div class="flex justify-between items-center mb-6">
+      <span id="step-indicator" class="text-xs font-semibold uppercase tracking-wider text-emerald-400">Step 1 of 6</span>
+      <div class="flex items-center gap-3">
+        <a href="/monitor" target="_blank" class="px-2.5 py-1 rounded-lg bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 text-xs hover:bg-indigo-500/30 transition">🖥️ Open Live Monitor (Screen 2) ↗</a>
+        <button onclick="resetDemo()" class="text-xs text-slate-400 hover:text-rose-400">↺ Reset</button>
+      </div>
+    </div>
+
+    <!-- PAGE 1: Language Selection -->
+    <div id="page-1" class="space-y-5">
+      <h1 class="text-2xl font-bold">Select Your Language</h1>
+      <p class="text-slate-400 text-sm">Welcome to your AI Dietary Assistant. Please confirm your language to begin.</p>
+      <div class="space-y-3">
+        <label class="flex items-center justify-between p-4 rounded-xl border-2 border-emerald-500 bg-emerald-500/10 cursor-pointer">
+          <span class="font-medium">🇬🇧 English (Default)</span>
+          <input type="radio" name="lang" checked class="accent-emerald-500 w-5 h-5" />
+        </label>
+        <label class="flex items-center justify-between p-4 rounded-xl border border-slate-700 bg-slate-800/50 opacity-45 cursor-not-allowed">
+          <span>🇨🇳 中文 (Chinese - Locked)</span>
+          <input type="radio" name="lang" disabled class="w-5 h-5" />
+        </label>
+        <label class="flex items-center justify-between p-4 rounded-xl border border-slate-700 bg-slate-800/50 opacity-45 cursor-not-allowed">
+          <span>🇪🇸 Español (Spanish - Locked)</span>
+          <input type="radio" name="lang" disabled class="w-5 h-5" />
+        </label>
+        <label class="flex items-center justify-between p-4 rounded-xl border border-slate-700 bg-slate-800/50 opacity-45 cursor-not-allowed">
+          <span>🇫🇷 Français (French - Locked)</span>
+          <input type="radio" name="lang" disabled class="w-5 h-5" />
+        </label>
+      </div>
+      <button onclick="goToPage(2)" class="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-xl transition">Confirm & Continue</button>
+    </div>
+
+    <!-- PAGE 2: Dietary Restrictions -->
+    <div id="page-2" class="hidden space-y-5">
+      <h1 class="text-2xl font-bold">Dietary Restrictions</h1>
+      <p class="text-slate-400 text-sm">What do you NOT eat? Select multiple, or add/click ✎ to edit your own items.</p>
+      <div id="restrictions-list" class="flex flex-wrap gap-2"></div>
+      <div class="flex gap-2">
+        <input id="new-restriction" type="text" placeholder="Add e.g. 'No Cilantro'..." class="flex-1 px-4 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm focus:outline-none focus:border-emerald-500" />
+        <button onclick="addItem('restrictions', 'new-restriction')" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-xl text-sm font-semibold">+ Add</button>
+      </div>
+      <div class="flex gap-3 pt-4">
+        <button onclick="goToPage(1)" class="w-1/3 py-3 bg-slate-700 hover:bg-slate-600 rounded-xl font-semibold">← Back</button>
+        <button onclick="confirmRestrictions()" class="w-2/3 py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-xl">Confirm Restrictions</button>
+      </div>
+    </div>
+
+    <!-- PAGE 3: Cuisine Preferences -->
+    <div id="page-3" class="hidden space-y-5">
+      <h1 class="text-2xl font-bold">Cuisine Preferences</h1>
+      <p class="text-slate-400 text-sm">Which cuisines do you enjoy? Select multiple or add/edit custom cuisines.</p>
+      <div id="cuisines-list" class="flex flex-wrap gap-2"></div>
+      <div class="flex gap-2">
+        <input id="new-cuisine" type="text" placeholder="Add custom cuisine..." class="flex-1 px-4 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm focus:outline-none focus:border-emerald-500" />
+        <button onclick="addItem('cuisines', 'new-cuisine')" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-xl text-sm font-semibold">+ Add</button>
+      </div>
+      <div class="flex gap-3 pt-4">
+        <button onclick="goToPage(2)" class="w-1/3 py-3 bg-slate-700 hover:bg-slate-600 rounded-xl font-semibold">← Back</button>
+        <button onclick="confirmCuisines()" class="w-2/3 py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-xl">Confirm Cuisines</button>
+      </div>
+    </div>
+
+    <!-- PAGE 4: Dietary Goals -->
+    <div id="page-4" class="hidden space-y-5">
+      <h1 class="text-2xl font-bold">Your Dietary Goals</h1>
+      <p class="text-slate-400 text-sm">What are your goals for today's meal? (Multi-select)</p>
+      <div id="goals-list" class="flex flex-wrap gap-2"></div>
+      <div class="flex gap-2">
+        <input id="new-goal" type="text" placeholder="Add custom goal..." class="flex-1 px-4 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm focus:outline-none focus:border-emerald-500" />
+        <button onclick="addItem('goals', 'new-goal')" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-xl text-sm font-semibold">+ Add</button>
+      </div>
+      <div class="flex gap-3 pt-4">
+        <button onclick="goToPage(3)" class="w-1/3 py-3 bg-slate-700 hover:bg-slate-600 rounded-xl font-semibold">← Back</button>
+        <button onclick="submitStep1()" class="w-2/3 py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-xl">Confirm & Generate 5 Probe Dishes</button>
+      </div>
+    </div>
+
+    <!-- PAGE 5: 5 Probe Dishes Swipe & Waiting State -->
+    <div id="page-5" class="hidden space-y-5">
+      <div id="swipe-header" class="flex justify-between items-center">
+        <button onclick="goToPage(4)" class="text-xs text-slate-400 hover:text-white">← Back to Goals</button>
+        <span id="card-counter" class="text-xs font-bold text-emerald-400">Dish 1 of 5</span>
+      </div>
+
+      <!-- Loading State with Live Subtitle Ticker -->
+      <div id="loading-box" class="py-12 text-center space-y-4">
+        <div class="w-12 h-12 border-4 border-emerald-400 border-t-transparent rounded-full animate-spin mx-auto"></div>
+        <h2 id="loading-title" class="text-lg font-bold">Gemma 4 is reasoning...</h2>
+        <p id="loading-desc" class="text-xs text-slate-400 max-w-md mx-auto"></p>
+        <!-- Subtitle Ticker Box -->
+        <div class="mt-4 p-3 rounded-xl bg-slate-950 border border-emerald-500/30 text-emerald-300 font-mono text-xs min-h-[44px] flex items-center justify-center">
+          <span id="live-subtitle-ticker">⏳ Initializing LLM stream...</span>
+        </div>
+      </div>
+
+      <!-- Dish Card Container -->
+      <div id="card-box" class="hidden space-y-4">
+        <div id="dish-card" class="relative rounded-2xl overflow-hidden bg-slate-900 border border-slate-700 p-5 space-y-3 select-none">
+          <div class="h-40 rounded-xl bg-gradient-to-br from-emerald-600/30 via-slate-800 to-indigo-600/30 flex flex-col items-center justify-center p-4 text-center border border-slate-700/60">
+            <span id="dish-role-badge" class="px-3 py-1 rounded-full text-xs bg-slate-900/80 text-emerald-300 mb-2"></span>
+            <h2 id="dish-name" class="text-2xl font-extrabold text-white"></h2>
+            <p id="dish-cuisine-method" class="text-sm text-slate-300 mt-1"></p>
+          </div>
+
+          <div class="grid grid-cols-4 gap-2 text-center text-xs bg-slate-800/80 p-3 rounded-xl">
+            <div><span class="text-slate-400 block">Price</span><strong id="dish-price" class="text-emerald-400 text-sm"></strong></div>
+            <div><span class="text-slate-400 block">Calories</span><strong id="dish-cal" class="text-sm"></strong></div>
+            <div><span class="text-slate-400 block">Protein</span><strong id="dish-prot" class="text-sm"></strong></div>
+            <div><span class="text-slate-400 block">Rating</span><strong id="dish-rate" class="text-amber-400 text-sm"></strong></div>
+          </div>
+
+          <div class="text-xs text-slate-300 space-y-1">
+            <p><strong class="text-slate-400">Ingredients:</strong> <span id="dish-ing"></span></p>
+            <p><strong class="text-slate-400">AI Probe Tag:</strong> <span id="dish-probe" class="text-indigo-300 font-semibold"></span></p>
+          </div>
+        </div>
+
+        <div class="flex gap-4">
+          <button onclick="recordSwipe(false)" class="flex-1 py-3.5 bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/50 text-rose-300 font-bold rounded-xl transition">👈 Swipe Left (Dislike)</button>
+          <button onclick="recordSwipe(true)" class="flex-1 py-3.5 bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/50 text-emerald-300 font-bold rounded-xl transition">Swipe Right (Like) 👉</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 6: Multi-Agent Consensus Ranking & Interactive Filters -->
+    <div id="page-6" class="hidden space-y-6">
+      <div class="flex flex-wrap justify-between items-center gap-2 border-b border-slate-700 pb-4">
+        <div>
+          <h1 class="text-2xl font-extrabold text-white">🏆 Multi-Expert Recommended Dishes (All 50 Scored)</h1>
+          <p id="page6-persona-summary" class="text-xs text-emerald-300 mt-1"></p>
+        </div>
+        <button onclick="goToPage(4)" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 rounded-lg text-xs font-semibold">← Adjust Goals</button>
+      </div>
+
+      <!-- Interactive Filter Controls: Real Price Range + Dummy Distance Slider -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-900 p-4 rounded-xl border border-slate-700">
+        <div class="space-y-2">
+          <div class="flex justify-between text-xs">
+            <span class="font-bold text-emerald-400">💷 Price Filter (Real Filter):</span>
+            <span id="price-label" class="font-mono font-bold text-white">£0.00 - £30.00</span>
+          </div>
+          <div class="flex items-center gap-2 text-xs text-slate-400">
+            <span>Min</span>
+            <input id="price-min-slider" type="range" min="0" max="30" step="0.5" value="0" oninput="onPriceSliderChange()" class="w-full accent-emerald-500 cursor-pointer" />
+            <span>Max</span>
+            <input id="price-max-slider" type="range" min="0" max="30" step="0.5" value="30" oninput="onPriceSliderChange()" class="w-full accent-emerald-500 cursor-pointer" />
+          </div>
+          <p class="text-[11px] text-slate-400">Filtering dishes strictly within your selected price interval.</p>
+        </div>
+
+        <div class="space-y-2">
+          <div class="flex justify-between text-xs">
+            <span class="font-bold text-indigo-400">📍 Max Distance (Simulated UI Slider):</span>
+            <span id="distance-label" class="font-mono font-bold text-white">Within 5.0 km</span>
+          </div>
+          <input id="distance-slider" type="range" min="0.5" max="10.0" step="0.5" value="5.0" oninput="onDistanceSliderChange()" class="w-full accent-indigo-500 cursor-pointer" />
+          <p class="text-[11px] text-slate-400">Simulated UI control; does not alter expert consensus ranking.</p>
+        </div>
+      </div>
+
+      <div class="flex justify-between items-center text-xs text-slate-400">
+        <span id="dish-count-status">Showing all 50 ranked dishes</span>
+        <span>Sorted by: <strong class="text-emerald-400">Consensus Score (μ - 0.25σ²) ↓</strong></span>
+      </div>
+
+      <div id="ranked-dishes-container" class="space-y-4 max-h-[540px] overflow-y-auto pr-1"></div>
+    </div>
+
+  </div>
+
+  <script>
+    const state = {
+      restrictions: [
+        { label: "No Beef", selected: true },
+        { label: "No Eggs", selected: false },
+        { label: "No Cheese", selected: false },
+        { label: "No Spicy", selected: false },
+        { label: "No Pork", selected: false },
+        { label: "No Seafood", selected: false },
+        { label: "No Nuts", selected: false }
+      ],
+      cuisines: [
+        { label: "Chinese", selected: true },
+        { label: "Indian", selected: false },
+        { label: "British", selected: false },
+        { label: "Korean", selected: true },
+        { label: "Japanese", selected: true },
+        { label: "Italian", selected: false },
+        { label: "Thai", selected: false }
+      ],
+      goals: [
+        { label: "Save Money", selected: true },
+        { label: "Health & Wellness", selected: true },
+        { label: "Low-Fat Fitness", selected: false },
+        { label: "Balanced Diet", selected: false },
+        { label: "Explore New Flavors", selected: false }
+      ],
+      fiveDishes: [],
+      currentIndex: 0,
+      choices: [],
+      rankedDishes: []
+    };
+
+    let tickerTimer = null;
+
+    async function syncMonitor(payload) {
+      try {
+        await fetch("/api/live-sync", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+      } catch (e) {}
+    }
+
+    async function resetDemo() {
+      await syncMonitor({ event_type: "reset" });
+      goToPage(1);
+    }
+
+    function startSubtitleCarousel(phrases) {
+      stopSubtitleCarousel();
+      let idx = 0;
+      const el = document.getElementById("live-subtitle-ticker");
+      el.innerText = phrases[0];
+      tickerTimer = setInterval(() => {
+        idx = (idx + 1) % phrases.length;
+        el.innerText = phrases[idx];
+      }, 1600);
+    }
+
+    function stopSubtitleCarousel() {
+      if (tickerTimer) clearInterval(tickerTimer);
+      tickerTimer = null;
+    }
+
+    function renderTags(key, containerId) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = "";
+      state[key].forEach((item, idx) => {
+        const pill = document.createElement("div");
+        pill.className = `flex items-center gap-2 px-3.5 py-2 rounded-xl border text-sm cursor-pointer transition ${
+          item.selected ? "bg-emerald-500/20 border-emerald-500 text-emerald-300 font-semibold" : "bg-slate-900 border-slate-700 text-slate-400"
+        }`;
+        pill.innerHTML = `
+          <span onclick="toggleItem('${key}', ${idx})">${item.selected ? "✓ " : ""}${item.label}</span>
+          <button onclick="editItem('${key}', ${idx})" title="Edit" class="text-xs text-slate-500 hover:text-slate-200 ml-1">✎</button>
+        `;
+        container.appendChild(pill);
+      });
+    }
+
+    function toggleItem(key, idx) {
+      state[key][idx].selected = !state[key][idx].selected;
+      renderAll();
+    }
+
+    function editItem(key, idx) {
+      const updated = prompt("Edit item (leave blank to delete):", state[key][idx].label);
+      if (updated === null) return;
+      if (updated.trim() === "") state[key].splice(idx, 1);
+      else state[key][idx].label = updated.trim();
+      renderAll();
+    }
+
+    function addItem(key, inputId) {
+      const input = document.getElementById(inputId);
+      const val = input.value.trim();
+      if (!val) return;
+      state[key].push({ label: val, selected: true });
+      input.value = "";
+      renderAll();
+    }
+
+    function renderAll() {
+      renderTags("restrictions", "restrictions-list");
+      renderTags("cuisines", "cuisines-list");
+      renderTags("goals", "goals-list");
+    }
+
+    function goToPage(pageNum) {
+      for (let i = 1; i <= 6; i++) {
+        document.getElementById(`page-${i}`).classList.add("hidden");
+      }
+      document.getElementById(`page-${pageNum}`).classList.remove("hidden");
+      document.getElementById("step-indicator").innerText = `Step ${pageNum} of 6`;
+      const mainContainer = document.getElementById("main-container");
+      if (pageNum === 6) {
+        mainContainer.classList.remove("max-w-xl");
+        mainContainer.classList.add("max-w-4xl");
+      } else {
+        mainContainer.classList.remove("max-w-4xl");
+        mainContainer.classList.add("max-w-xl");
+      }
+      syncMonitor({ event_type: "page_step", page: pageNum });
+    }
+
+    async function confirmRestrictions() {
+      const selected = state.restrictions.filter(x => x.selected).map(x => x.label);
+      await syncMonitor({ event_type: "page_step", page: 3, restrictions: selected });
+      goToPage(3);
+    }
+
+    async function confirmCuisines() {
+      const selected = state.cuisines.filter(x => x.selected).map(x => x.label);
+      await syncMonitor({ event_type: "page_step", page: 4, cuisines: selected });
+      goToPage(4);
+    }
+
+    async function submitStep1() {
+      const rList = state.restrictions.filter(x => x.selected).map(x => x.label);
+      const cList = state.cuisines.filter(x => x.selected).map(x => x.label);
+      const gList = state.goals.filter(x => x.selected).map(x => x.label);
+
+      await syncMonitor({ event_type: "page_step", page: 5, restrictions: rList, cuisines: cList, goals: gList });
+      goToPage(5);
+
+      document.getElementById("swipe-header").classList.remove("hidden");
+      document.getElementById("loading-box").classList.remove("hidden");
+      document.getElementById("card-box").classList.add("hidden");
+      document.getElementById("loading-title").innerText = "Gemma 4 is reasoning on Prompt 1...";
+      document.getElementById("loading-desc").innerText = "Splitting Safe Pool vs Boundary Pool & selecting 5 diagnostic probe dishes...";
+
+      startSubtitleCarousel([
+        "🎬 [Prompt 1] Filtering 50 dishes into Safe Pool A & Boundary Pool B...",
+        "🎯 Selecting Probe 1 & 2: [预算锚点 Budget Anchor]...",
+        "💎 Selecting Probe 3: [高价品质探针 High-Price Quality Probe]...",
+        "🌶️ Selecting Probe 4: [跨界新口味探针 Novelty Flavor Probe]...",
+        "🛡️ Selecting Probe 5: [忌口边界探针 Restriction Boundary Probe]..."
+      ]);
+
+      const res = await fetch("/api/step1-probe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ language: "English", restrictions: rList, cuisines: cList, goals: gList })
+      });
+      const data = await res.json();
+      stopSubtitleCarousel();
+
+      state.fiveDishes = data.five_dishes;
+      state.currentIndex = 0;
+      state.choices = [];
+
+      document.getElementById("loading-box").classList.add("hidden");
+      document.getElementById("card-box").classList.remove("hidden");
+      showCurrentDish();
+    }
+
+    function showCurrentDish() {
+      const d = state.fiveDishes[state.currentIndex];
+      document.getElementById("card-counter").innerText = `Dish ${state.currentIndex + 1} of ${state.fiveDishes.length}`;
+      document.getElementById("dish-role-badge").innerText = `${d.role} • ${d.meal_period.join("/")}`;
+      document.getElementById("dish-name").innerText = d.name;
+      document.getElementById("dish-cuisine-method").innerText = `${d.cuisine} Cuisine • ${d.cooking_method}`;
+      document.getElementById("dish-price").innerText = `£${d.price.toFixed(2)}`;
+      document.getElementById("dish-cal").innerText = `${d.calories} kcal`;
+      document.getElementById("dish-prot").innerText = `${d.protein_g}g`;
+      document.getElementById("dish-rate").innerText = `★ ${d.rating}`;
+      document.getElementById("dish-ing").innerText = d.ingredients.join(", ");
+      document.getElementById("dish-probe").innerText = `[${d.probe_category}] ${d.probe_hypothesis}`;
+    }
+
+    async function recordSwipe(liked) {
+      const currentDish = state.fiveDishes[state.currentIndex];
+      state.choices.push({ dish_id: currentDish.id, liked });
+
+      await syncMonitor({
+        event_type: "single_swipe",
+        swipe_item: {
+          name: currentDish.name,
+          price: currentDish.price,
+          category: currentDish.probe_category,
+          liked: liked
+        }
+      });
+
+      state.currentIndex++;
+
+      if (state.currentIndex < state.fiveDishes.length) {
+        showCurrentDish();
+      } else {
+        document.getElementById("card-box").classList.add("hidden");
+        document.getElementById("swipe-header").classList.add("hidden");
+        document.getElementById("loading-box").classList.remove("hidden");
+        document.getElementById("loading-title").innerText = "Fusing Profiles & Running 3 Expert Agents (50 Dishes × 5 Attrs)...";
+        document.getElementById("loading-desc").innerText = "Watch Screen 2 (/monitor) for the live profile fusion animation & batch scoring progress!";
+
+        startSubtitleCarousel([
+          "🕵️‍♂️ [Prompt 2] Inferring Dynamic Preferences: [高价接受度] [养生侧重] [探索欲] [忌口弹性]...",
+          "💥 [Profile Fusion] Colliding 🧑‍🌾 Base Profile + 🕵️‍♂️ Dynamic Cravings ➔ 🧬 Merged Profile!",
+          "🥗 [Agent 1: Dr. Nutri] Scoring 50 Dishes (Batch 1/2 & 2/2) on 5 Attributes...",
+          "🌶️ [Agent 2: Chef Nova] Scoring 50 Dishes (Batch 1/2 & 2/2) on 5 Attributes...",
+          "🤝 [Agent 3: CareBot] Scoring 50 Dishes (Batch 1/2 & 2/2) on 5 Attributes...",
+          "📐 [Consensus Engine] Computing Mean (μ) & Variance (σ²) ➔ Ranking by μ - 0.25σ²..."
+        ]);
+
+        const res = await fetch("/api/step2-finalize-and-rank", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ choices: state.choices })
+        });
+        const data = await res.json();
+        stopSubtitleCarousel();
+
+        state.rankedDishes = data.ranked_dishes || [];
+        const minP = Math.floor(data.price_bounds.min);
+        const maxP = Math.ceil(data.price_bounds.max);
+        const minSlider = document.getElementById("price-min-slider");
+        const maxSlider = document.getElementById("price-max-slider");
+        minSlider.min = minP; minSlider.max = maxP; minSlider.value = minP;
+        maxSlider.min = minP; maxSlider.max = maxP; maxSlider.value = maxP;
+
+        document.getElementById("page6-persona-summary").innerText =
+          data.merged_final_user_profile.inferred_current_preferences.refined_today_persona_summary || "";
+
+        goToPage(6);
+        onPriceSliderChange();
+      }
+    }
+
+    function onDistanceSliderChange() {
+      const val = parseFloat(document.getElementById("distance-slider").value);
+      document.getElementById("distance-label").innerText = `Within ${val.toFixed(1)} km`;
+    }
+
+    function onPriceSliderChange() {
+      let minVal = parseFloat(document.getElementById("price-min-slider").value);
+      let maxVal = parseFloat(document.getElementById("price-max-slider").value);
+      if (minVal > maxVal) { const t = minVal; minVal = maxVal; maxVal = t; }
+      document.getElementById("price-label").innerText = `£${minVal.toFixed(2)} - £${maxVal.toFixed(2)}`;
+      renderRankedDishes(minVal, maxVal);
+    }
+
+    function renderRankedDishes(minPrice, maxPrice) {
+      const container = document.getElementById("ranked-dishes-container");
+      container.innerHTML = "";
+
+      const filtered = state.rankedDishes.filter(d => d.price >= minPrice && d.price <= maxPrice);
+      document.getElementById("dish-count-status").innerText =
+        `Showing ${filtered.length} of ${state.rankedDishes.length} total dishes (All 50 Dishes Scored)`;
+
+      syncMonitor({
+        event_type: "price_slider",
+        price_filter: { min: minPrice, max: maxPrice, visible_count: filtered.length }
+      });
+
+      filtered.forEach((d, idx) => {
+        const ev = d.evaluation;
+        const nExp = ev.experts.nutrition_expert;
+        const cExp = ev.experts.culinary_explorer;
+        const aExp = ev.experts.caring_assistant;
+
+        const card = document.createElement("div");
+        card.className = "p-4 rounded-xl bg-slate-900 border border-slate-700 hover:border-emerald-500/60 transition space-y-3";
+        card.innerHTML = `
+          <div class="flex flex-wrap justify-between items-start gap-2">
+            <div>
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-md bg-emerald-500 text-slate-950 font-extrabold text-xs">#${idx + 1}</span>
+                <h3 class="text-lg font-bold text-white">${d.name}</h3>
+                <span class="px-2 py-0.5 rounded bg-slate-800 text-emerald-300 text-xs font-semibold">£${d.price.toFixed(2)}</span>
+                <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-xs">${d.cuisine}</span>
+                <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-400 text-xs">📍 ${d.distance_km} km</span>
+                ${d.violated_restrictions && d.violated_restrictions.length > 0
+                  ? `<span class="px-2 py-0.5 rounded bg-rose-500/20 border border-rose-500/50 text-rose-300 text-[11px] font-semibold">⚠️ Contains: ${d.violated_restrictions.join(", ")}</span>`
+                  : `<span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[11px]">✓ Restriction-Free</span>`}
+              </div>
+              <p class="text-xs text-slate-400 mt-1">
+                ${d.role} • ${d.cooking_method} • ${d.calories} kcal • Protein ${d.protein_g}g • Fiber ${d.fiber_g}g • Veg ${d.veg_content_g}g • ★ ${d.rating}
+              </p>
+            </div>
+
+            <div class="flex items-center gap-2 bg-slate-950 px-3 py-2 rounded-xl border border-slate-800 text-right">
+              <div>
+                <span class="text-[10px] text-slate-400 block">Consensus Score</span>
+                <strong class="text-base text-emerald-400 font-mono">${ev.consensus_ranking_score.toFixed(2)}</strong>
+              </div>
+              <div class="border-l border-slate-800 pl-2">
+                <span class="text-[10px] text-slate-400 block">Mean (μ)</span>
+                <strong class="text-sm text-white font-mono">${ev.mean_score.toFixed(2)}</strong>
+              </div>
+              <div class="border-l border-slate-800 pl-2">
+                <span class="text-[10px] text-slate-400 block">Variance (σ²)</span>
+                <strong class="text-sm text-amber-400 font-mono">${ev.variance.toFixed(3)}</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-2 pt-2 border-t border-slate-800 text-xs">
+            <div class="p-2.5 rounded-lg bg-slate-800/60 border border-slate-700/60">
+              <div class="flex justify-between font-bold text-emerald-300">
+                <span>🥗 Nutrition Expert</span><span>${nExp.agent_mean_score.toFixed(2)}</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-1">N:${nExp.attributes.nutrition_balance} C:${nExp.attributes.cooking_healthiness} F:${nExp.attributes.flavor_novelty_match} P:${nExp.attributes.price_value_fit} G:${nExp.attributes.goal_role_alignment}</p>
+              <p class="text-[11px] text-slate-300 italic mt-1">"${nExp.comment}"</p>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-800/60 border border-slate-700/60">
+              <div class="flex justify-between font-bold text-amber-300">
+                <span>🌶️ Flavor Explorer</span><span>${cExp.agent_mean_score.toFixed(2)}</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-1">N:${cExp.attributes.nutrition_balance} C:${cExp.attributes.cooking_healthiness} F:${cExp.attributes.flavor_novelty_match} P:${cExp.attributes.price_value_fit} G:${cExp.attributes.goal_role_alignment}</p>
+              <p class="text-[11px] text-slate-300 italic mt-1">"${cExp.comment}"</p>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-800/60 border border-slate-700/60">
+              <div class="flex justify-between font-bold text-indigo-300">
+                <span>🤝 Caring Assistant</span><span>${aExp.agent_mean_score.toFixed(2)}</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-1">N:${aExp.attributes.nutrition_balance} C:${aExp.attributes.cooking_healthiness} F:${aExp.attributes.flavor_novelty_match} P:${aExp.attributes.price_value_fit} G:${aExp.attributes.goal_role_alignment}</p>
+              <p class="text-[11px] text-slate-300 italic mt-1">"${aExp.comment}"</p>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    window.addEventListener("keydown", (e) => {
+      if (!document.getElementById("card-box").classList.contains("hidden")) {
+        if (e.key === "ArrowLeft") recordSwipe(false);
+        if (e.key === "ArrowRight") recordSwipe(true);
+      }
+    });
+
+    renderAll();
+  </script>
+</body>
+</html>

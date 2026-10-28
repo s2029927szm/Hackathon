@@ -1,0 +1,9 @@
+本次局部更新：
+- 新的六个忌口图标。
+- Solo 转盘页面、约4秒旋转、结果弹窗、再转一次、查看详情和选餐入口。
+- 空筛选时保留六扇区转盘并给出可操作提示。
+
+其他页面未改动。app.js、enhancements.js、style.css 保持原文件。
+Solo 专用代码在 solo-fix.js，专用样式在 solo-fix.css。
+原 FoodCompass/index.html 与 FoodCompass-Web/index.html 已同步。
+如浏览器仍显示旧版，请 Ctrl+F5 刷新或关闭后重新打开。
